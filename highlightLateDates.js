@@ -21,8 +21,14 @@ var dateHighlighter = function($) {
     var issueHighlights = function() {
         var d = toJsDate($('.attributes .due-date:last').text());
         if(d < today) {
+            var diff = today.getDayOfYear() - d.getDayOfYear();
             $('#content h2').css('background-image', 'url(/themes/a1/images/smooth-gradient-red.jpg)');
             $('.attributes .due-date').css('color', '#f20');
+            var s = 's';
+            if(diff===1) {
+                s = '';
+            }
+            $('.attributes .due-date:last').append(' (' + diff + ' day' + s + ' overdue)');
         }
     };
 
