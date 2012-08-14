@@ -12,7 +12,7 @@ function toJsDate(text) {
     return d;
 }
 
-jQuery(document).ready(function($) {
+var dateHighlighter = function($) {
     var currentUser = $('#loggedas>a').text();
     var dueCol = ($('table.issues tr>th:nth-child(11)').text() === 'Due date') ? 11 : 12;
     var today = new Date();
@@ -21,14 +21,42 @@ jQuery(document).ready(function($) {
         var d = toJsDate($(this).text());
         var rowData = $(this).siblings();
         var cols = rowData.length;
+
+        if(d.getDayOfYear() < today.getDayOfYear() + 4) {
+            colorCode = '#fff6ea';
+        }
+
+        if(d.getDayOfYear() > today.getDayOfYear() + 4) {
+            colorCode = '#ebffea';
+        }
+
+        if(d.getDayOfYear() > today.getDayOfYear() + 7) {
+            colorCode = '#b8ffb4';
+        }
+
         if(d < today) {
             if($(rowData[cols - 3]).text().replace(' ', '') === currentUser) {
                 colorCode = '#ffabab';
             } else {
                 colorCode = '#ffeaea';
             }
-            console.log(currentUser, $(rowData[cols - 3]).text());
-            $(this).parent('tr').css('background-color', colorCode);
         }
+
+        if(d.getDayOfYear() === today.getDayOfYear()) {
+            colorCode = '#ffd59e';
+        }
+
+        console.log(d, isNaN(d.getTime()));
+        if (isNaN(d.getTime())) {
+            $(this).siblings().css('border', 'dotted 2px #ffabab');
+        }
+
+        $(this).parent('tr').css('background-color', colorCode);
     });
-});
+};
+
+try {
+    jQuery(document).ready(dateHighlighter);
+} catch(e) {
+    console.log(e);
+}
